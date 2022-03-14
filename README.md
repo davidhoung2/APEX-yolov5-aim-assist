@@ -9,4 +9,6 @@
 
 菜逼大學生實力有點弱,若有可修改方案或想法歡迎提供
 
-參考: https://www.bilibili.com/video/BV1x64y1e7p5/?spm_id_from=333.788.recommend_more_video.1
+影片: https://www.youtube.com/watch?v=_QKDEI8uhQQ&ab_channel=%E5%91%86%E5%91%86
+
+想法來源: https://www.bilibili.com/video/BV1x64y1e7p5/?spm_id_from=333.788.recommend_more_video.1
