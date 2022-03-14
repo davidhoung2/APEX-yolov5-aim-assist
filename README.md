@@ -1,5 +1,6 @@
 # APEX-yolov5-aim-assit
 1.下載上列資源
+
 2.執行apex.py
 
 模型不太準確(可以用自己訓練的模型)
