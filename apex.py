@@ -1,4 +1,4 @@
-from aim_csgo.apex_aim import lock, recoil_control
+from aim_csgo.apex_aim import lock
 from aim_csgo.screen_inf import grab_screen_mss, grab_screen_win32, get_parameters
 from aim_csgo.cs_model import load_model
 import cv2
@@ -11,34 +11,33 @@ from aim_csgo.verify_args import verify_args
 from utils.general import non_max_suppression, scale_coords, xyxy2xywh
 from utils.augmentations import letterbox
 import pynput
-from threading import Thread
 import argparse
 import time
 import os
 from simple_pid import PID
 parser = argparse.ArgumentParser()
-parser.add_argument('--model-path', type=str, default='runs/train/exp14/weights/best.pt', help='模型地址')
+parser.add_argument('--model-path', type=str, default='runs/apexSt1.pt', help='模型地址')
 parser.add_argument('--imgsz', type=int, default=640, help='和你训练模型时imgsz一样')
 parser.add_argument('--conf-thres', type=float, default=0.1, help='置信阈值')
-parser.add_argument('--iou-thres', type=float, default=0.65, help='交并比阈值')
+parser.add_argument('--iou-thres', type=float, default=0.45, help='交并比阈值')
 parser.add_argument('--use-cuda', type=bool, default=True, help='是否使用cuda')
 
 parser.add_argument('--show-window', type=bool, default=False, help='是否显示实时检测窗口(新版里改进了效率。若为True，不要去点右上角的X')
 parser.add_argument('--top-most', type=bool, default=True, help='是否保持实时检测窗口置顶')
 parser.add_argument('--resize-window', type=float, default=1/2, help='缩放实时检测窗口大小')
 parser.add_argument('--thickness', type=int, default=5, help='画框粗细，必须大于1/resize-window')
-parser.add_argument('--show-fps', type=bool, default=True, help='是否显示帧率')
+parser.add_argument('--show-fps', type=bool, default=False, help='是否显示帧率')
 parser.add_argument('--show-label', type=bool, default=False, help='是否显示标签')
 
 parser.add_argument('--use_mss', type=str, default=False, help='是否使用mss截屏；为False时使用win32截屏，自行比对速度')
 
-parser.add_argument('--region', type=tuple, default=(0.15, 0.4), help='检测范围；分别为横向和竖向，(1.0, 1.0)表示全屏检测，越低检测范围越小(始终保持屏幕中心为中心)')
+parser.add_argument('--region', type=tuple, default=(0.18, 0.35), help='检测范围；分别为横向和竖向，(1.0, 1.0)表示全屏检测，越低检测范围越小(始终保持屏幕中心为中心)')
 
 parser.add_argument('--hold-lock', type=bool, default=True, help='lock模式；True为按住，False为切换')
 parser.add_argument('--lock-sen', type=float, default= 3.0, help='lock幅度系数；若在桌面试用请调成1，在游戏中(csgo)则为灵敏度')
-parser.add_argument('--lock-smooth', type=float, default=1.8, help='lock平滑系数；越大越平滑，最低1.0')#3.3
+parser.add_argument('--lock-smooth', type=float, default=1.9, help='lock平滑系数；越大越平滑，最低1.0')
 parser.add_argument('--lock-button', type=str, default='x2', help='lock按键；只支持鼠标按键')
-parser.add_argument('--head-first', type=bool, default=True, help='是否优先瞄头')
+parser.add_argument('--head-first', type=bool, default=False, help='是否优先瞄头')
 parser.add_argument('--lock-tag', type=list, default=[0], help='对应标签；person')
 parser.add_argument('--lock-choice', type=list, default=[0], help='目标选择；可自行决定锁定的目标，从自己的标签中选')
 
@@ -77,10 +76,10 @@ lock_button = eval('pynput.mouse.Button.' + args.lock_button)
 
 mouse = pynput.mouse.Controller()
 
-pidx = PID(1.2, 3, 0.0, setpoint=0, sample_time=0.001,)
-pidy = PID(1.1, 0.08, 0.0, setpoint=0, sample_time=0.001,)
-pidx.output_limits = (-5000 ,5000)
-pidy.output_limits = (-2500 ,2500)
+pidx = PID(1.2, 3.51, 0.0, setpoint=0, sample_time=0.001,)
+pidy = PID(1.22, 0.12, 0.0, setpoint=0, sample_time=0.001,)
+pidx.output_limits = (-4000 ,4000)
+pidy.output_limits = (-3000 ,3000)
 
 if args.show_window:
     cv2.namedWindow('aim', cv2.WINDOW_NORMAL)
@@ -173,7 +172,6 @@ while True:
                 if args.show_label:
                     cv2.putText(img0, tag, top_left, cv2.FONT_HERSHEY_SIMPLEX, 0.7, (235, 0, 0), 4)
 
-
     if args.show_window:
         if args.show_fps:
             cv2.putText(img0,"FPS:{:.1f}".format(1. / (time.time() - t0)), (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 0, 235), 4)
@@ -192,4 +190,4 @@ while True:
         cv2.waitKey(1)
     pidx(0)
     pidy(0)
-    #cnt += 1
+    cnt += 1
