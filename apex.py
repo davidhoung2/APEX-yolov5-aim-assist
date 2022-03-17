@@ -16,7 +16,7 @@ import time
 import os
 from simple_pid import PID
 parser = argparse.ArgumentParser()
-parser.add_argument('--model-path', type=str, default='runs/apexSt1.pt', help='模型地址')
+parser.add_argument('--model-path', type=str, default='weights/best.pt', help='模型地址')
 parser.add_argument('--imgsz', type=int, default=640, help='和你训练模型时imgsz一样')
 parser.add_argument('--conf-thres', type=float, default=0.1, help='置信阈值')
 parser.add_argument('--iou-thres', type=float, default=0.45, help='交并比阈值')
