@@ -16,30 +16,30 @@ import time
 import os
 from simple_pid import PID
 parser = argparse.ArgumentParser()
-parser.add_argument('--model-path', type=str, default='weights/best.pt', help='模型地址')
-parser.add_argument('--imgsz', type=int, default=640, help='和你训练模型时imgsz一样')
-parser.add_argument('--conf-thres', type=float, default=0.1, help='置信阈值')
-parser.add_argument('--iou-thres', type=float, default=0.45, help='交并比阈值')
-parser.add_argument('--use-cuda', type=bool, default=True, help='是否使用cuda')
+parser.add_argument('--model-path', type=str, default='weights/best.pt', help='模型位址 model address')
+parser.add_argument('--imgsz', type=int, default=640, help='和訓練模型时imgsz一樣')
+parser.add_argument('--conf-thres', type=float, default=0.1, help='置信閥值')
+parser.add_argument('--iou-thres', type=float, default=0.45, help='交並比閥值')
+parser.add_argument('--use-cuda', type=bool, default=True, help='是否使用cuda') 
 
-parser.add_argument('--show-window', type=bool, default=False, help='是否显示实时检测窗口(新版里改进了效率。若为True，不要去点右上角的X')
-parser.add_argument('--top-most', type=bool, default=True, help='是否保持实时检测窗口置顶')
-parser.add_argument('--resize-window', type=float, default=1/2, help='缩放实时检测窗口大小')
-parser.add_argument('--thickness', type=int, default=5, help='画框粗细，必须大于1/resize-window')
-parser.add_argument('--show-fps', type=bool, default=False, help='是否显示帧率')
-parser.add_argument('--show-label', type=bool, default=False, help='是否显示标签')
+parser.add_argument('--show-window', type=bool, default=False, help='是否顯示實時檢測窗口(debug用,若是True,不要去點右上角的X)')
+parser.add_argument('--top-most', type=bool, default=True, help='是否保持窗口置頂')
+parser.add_argument('--resize-window', type=float, default=1/2, help='缩放窗口大小')
+parser.add_argument('--thickness', type=int, default=5, help='邊框粗細，需大於1/resize-window')
+parser.add_argument('--show-fps', type=bool, default=False, help='是否顯示fps')
+parser.add_argument('--show-label', type=bool, default=False, help='是否顯示標籤')
 
-parser.add_argument('--use_mss', type=str, default=False, help='是否使用mss截屏；为False时使用win32截屏，自行比对速度')
+parser.add_argument('--use_mss', type=str, default=False, help='是否使用mss截屏；为False時使用win32截屏')
 
-parser.add_argument('--region', type=tuple, default=(0.18, 0.35), help='检测范围；分别为横向和竖向，(1.0, 1.0)表示全屏检测，越低检测范围越小(始终保持屏幕中心为中心)')
+parser.add_argument('--region', type=tuple, default=(0.18, 0.35), help='檢測範圍；分别为x軸和y軸，(1.0, 1.0)表示全屏檢測，越低檢測範圍越小(以屏幕中心為檢測中心)')
 
-parser.add_argument('--hold-lock', type=bool, default=True, help='lock模式；True为按住，False为切换')
-parser.add_argument('--lock-sen', type=float, default= 3.0, help='lock幅度系数；若在桌面试用请调成1，在游戏中(csgo)则为灵敏度')
-parser.add_argument('--lock-smooth', type=float, default=1.9, help='lock平滑系数；越大越平滑，最低1.0')
-parser.add_argument('--lock-button', type=str, default='x2', help='lock按键；只支持鼠标按键')
-parser.add_argument('--head-first', type=bool, default=False, help='是否优先瞄头')
-parser.add_argument('--lock-tag', type=list, default=[0], help='对应标签；person')
-parser.add_argument('--lock-choice', type=list, default=[0], help='目标选择；可自行决定锁定的目标，从自己的标签中选')
+parser.add_argument('--hold-lock', type=bool, default=True, help='lock模式；True為按住，False為切換')
+parser.add_argument('--lock-sen', type=float, default= 3.0, help='lock幅度系數,遊戲中靈敏度(建議不要調整)')
+parser.add_argument('--lock-smooth', type=float, default=1.9, help='lock平滑系数；越大越平滑')
+parser.add_argument('--lock-button', type=str, default='x2', help='lock按鍵；只支持鼠標按键')
+parser.add_argument('--head-first', type=bool, default=False, help='是否優先瞄頭')
+parser.add_argument('--lock-tag', type=list, default=[0], help='對應標籤；person(若模型不同請自行修改對應標籤)')
+parser.add_argument('--lock-choice', type=list, default=[0], help='目標選擇；决定鎖定的目標，從自己的標籤中選')
 
 args = parser.parse_args()
 
@@ -76,6 +76,7 @@ lock_button = eval('pynput.mouse.Button.' + args.lock_button)
 
 mouse = pynput.mouse.Controller()
 
+#pid係數可自行調整(以下為我自己使用的參數)
 pidx = PID(1.2, 3.51, 0.0, setpoint=0, sample_time=0.001,)
 pidy = PID(1.22, 0.12, 0.0, setpoint=0, sample_time=0.001,)
 pidx.output_limits = (-4000 ,4000)
