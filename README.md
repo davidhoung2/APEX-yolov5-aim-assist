@@ -14,3 +14,6 @@
 影片: https://www.youtube.com/watch?v=_QKDEI8uhQQ&ab_channel=%E5%91%86%E5%91%86
 
 想法來源: https://www.bilibili.com/video/BV1x64y1e7p5/?spm_id_from=333.788.recommend_more_video.1
+
+<此方案暫時停更,快要畢業了, 要找工作了!!!>
+<也先不回答問題了, 很忙>
